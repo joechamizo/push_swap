@@ -20,27 +20,37 @@ OBJ_DIR = obj
 
 SRCS = push_swap.c \
 	$(SRC_DIR)/parser.c \
+	$(SRC_DIR)/split.c \
 	$(SRC_DIR)/operations.c \
 	$(SRC_DIR)/handlers.c \
 	$(SRC_DIR)/router.c \
+	$(SRC_DIR)/flags.c \
 	$(SRC_DIR)/indexing.c \
 	$(SRC_DIR)/strategies.c \
+	$(SRC_DIR)/strategies_chunks.c \
+	$(SRC_DIR)/strategies_radix.c \
 	$(SRC_DIR)/strategies_utils.c \
 	$(SRC_DIR)/benchmark.c \
 	$(SRC_DIR)/memory.c \
-	$(SRC_DIR)/utils.c
+	$(SRC_DIR)/utils.c \
+	$(SRC_DIR)/string_utils.c
 
 BONUS_SRCS = checker.c \
 	$(SRC_DIR)/parser.c \
+	$(SRC_DIR)/split.c \
 	$(SRC_DIR)/operations.c \
 	$(SRC_DIR)/handlers.c \
 	$(SRC_DIR)/router.c \
+	$(SRC_DIR)/flags.c \
 	$(SRC_DIR)/indexing.c \
 	$(SRC_DIR)/strategies.c \
+	$(SRC_DIR)/strategies_chunks.c \
+	$(SRC_DIR)/strategies_radix.c \
 	$(SRC_DIR)/strategies_utils.c \
 	$(SRC_DIR)/benchmark.c \
 	$(SRC_DIR)/memory.c \
-	$(SRC_DIR)/utils.c
+	$(SRC_DIR)/utils.c \
+	$(SRC_DIR)/string_utils.c
 
 OBJS = $(SRCS:%.c=$(OBJ_DIR)/%.o)
 BONUS_OBJS = $(BONUS_SRCS:%.c=$(OBJ_DIR)/%.o)

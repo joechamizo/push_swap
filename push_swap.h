@@ -22,14 +22,14 @@ typedef enum e_strategy
 	STRAT_SIMPLE,
 	STRAT_MEDIUM,
 	STRAT_COMPLEX
-}	t_strategy;
+} t_strategy;
 
 typedef struct s_stack
 {
 	int				value;
 	int				index;
 	struct s_stack	*next;
-}	t_stack;
+} t_stack;
 
 typedef struct s_program
 {
@@ -41,7 +41,7 @@ typedef struct s_program
 	int			op_counts[11];
 	int			initial_size;
 	double		disorder_index;
-}	t_program;
+} t_program;
 
 int		parse_flag(char *arg, t_program *prog);
 char	**ft_split(char const *s, char c);
