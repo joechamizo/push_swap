@@ -3,18 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: joaqumar <joaqumar@student.42barcelona.co  +#+  +:+       +#+        */
+/*   By: acoromin <acoromin@student.42barcelona.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/05/18 14:03:48 by joaqumar          #+#    #+#             */
-/*   Updated: 2026/05/18 14:03:53 by joaqumar         ###   ########.fr       */
+/*   Created: 2026/05/20 00:00:00 by acoromin          #+#    #+#             */
+/*   Updated: 2026/05/20 00:00:00 by acoromin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
 
-/**
- * Calcula la longitud de una cadena de caracteres de forma segura.
- */
 size_t	ft_strlen(const char *s)
 {
 	size_t	i;
@@ -25,36 +22,29 @@ size_t	ft_strlen(const char *s)
 	return (i);
 }
 
-/**
- * Inserta un nuevo nodo al final del stack A (lista enlazada).
- * Si ocurre un fallo de memoria, libera el programa y sale con error.
- */
-void	append_node(t_stack **stack, int value)
+int	append_node(t_stack **stack, int value)
 {
 	t_stack	*new_node;
 	t_stack	*tmp;
 
 	new_node = malloc(sizeof(t_stack));
 	if (!new_node)
-		exit_error(NULL);
+		return (0);
 	new_node->value = value;
 	new_node->index = -1;
 	new_node->next = NULL;
 	if (!*stack)
 	{
 		*stack = new_node;
-		return ;
+		return (1);
 	}
 	tmp = *stack;
 	while (tmp->next)
 		tmp = tmp->next;
 	tmp->next = new_node;
+	return (1);
 }
 
-/**
- * Compara dos cadenas de caracteres de forma segura.
- * Devuelve 0 si son idénticas, o la diferencia numérica si difieren.
- */
 int	ft_strcmp(const char *s1, const char *s2)
 {
 	size_t	i;
@@ -69,18 +59,11 @@ int	ft_strcmp(const char *s1, const char *s2)
 	return (0);
 }
 
-/**
- * Verifica si un carácter es un dígito numérico (0-9).
- */
 int	ft_isdigit(int c)
 {
 	return (c >= '0' && c <= '9');
 }
 
-/**
- * Convierte una cadena de caracteres en un entero largo (long).
- * Es crucial usar 'long' para poder detectar desbordamientos de INT_MAX o INT_MIN.
- */
 long	ft_atol(const char *str)
 {
 	long	result;

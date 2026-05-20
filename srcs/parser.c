@@ -3,16 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: joaqumar <joaqumar@student.42barcelona.co  +#+  +:+       +#+        */
+/*   By: acoromin <acoromin@student.42barcelona.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/05/18 14:02:41 by joaqumar          #+#    #+#             */
-/*   Updated: 2026/05/20 17:57:33 by joaqumar         ###   ########.fr       */
+/*   Created: 2026/05/20 00:00:00 by acoromin          #+#    #+#             */
+/*   Updated: 2026/05/20 00:00:00 by acoromin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
 
-// 1. Cuenta cuántas palabras/números hay separados por el delimitador
 static int	count_words(const char *s, char c)
 {
 	int	count;
@@ -34,99 +33,147 @@ static int	count_words(const char *s, char c)
 	return (count);
 }
 
-// 2. Reserva memoria e inserta una palabra aislada en la matriz
-static char	*get_word(const char *s, int start, int finish)
+static char	*get_word(const char *s, size_t start, size_t end)
 {
 	char	*word;
-	int		i;
+	size_t	i;
 
-	word = malloc(sizeof(char) * (finish - start + 1));
+	word = malloc(sizeof(char) * (end - start + 1));
 	if (!word)
 		return (NULL);
 	i = 0;
-	while (start < finish)
-		word[i++] = s[start++];
+	while (start < end)
+	{
+		word[i] = s[start];
+		i++;
+		start++;
+	}
 	word[i] = '\0';
 	return (word);
 }
 
-// 3. Divide una string en una matriz de strings usando un carácter delimitador
+static void	*free_partial(char **matrix, int count)
+{
+	while (count > 0)
+	{
+		count--;
+		free(matrix[count]);
+	}
+	free(matrix);
+	return (NULL);
+}
+
+static char	**fill_split(char const *s, char c, char **matrix)
+{
+	size_t	i;
+	size_t	start;
+	int		j;
+
+	i = 0;
+	j = 0;
+	while (s[i])
+	{
+		while (s[i] && s[i] == c)
+			i++;
+		start = i;
+		while (s[i] && s[i] != c)
+			i++;
+		if (i > start)
+		{
+			matrix[j] = get_word(s, start, i);
+			if (!matrix[j])
+				return (free_partial(matrix, j));
+			j++;
+		}
+	}
+	matrix[j] = NULL;
+	return (matrix);
+}
+
 char	**ft_split(char const *s, char c)
 {
-	char	**result;
-	size_t	i;
-	int		j;
-	int		s_word;
+	char	**matrix;
 
 	if (!s)
 		return (NULL);
-	result = malloc(sizeof(char *) * (count_words(s, c) + 1));
-	if (!result)
+	matrix = malloc(sizeof(char *) * (count_words(s, c) + 1));
+	if (!matrix)
 		return (NULL);
-	i = 0;
-	j = 0;
-	s_word = -1;
-	while (s[i])
-	{
-		if (s[i] != c && s_word < 0)
-			s_word = i;
-		else if ((s[i] == c || s[i] == '\0') && s_word >= 0)
-		{
-			result[j++] = get_word(s, s_word, i);
-			s_word = -1;
-		}
-		i++;
-	}
-	if (s_word >= 0)
-		result[j++] = get_word(s, s_word, i);
-	result[j] = NULL;
-	return (result);
+	return (fill_split(s, c, matrix));
 }
 
-// 4. Valida la cadena, convierte a entero largo y verifica desbordamientos
-static int	validate_and_atoi(char *str, t_program *prog)
+static int	get_sign(char *str, int *i)
 {
-	long	num;
+	int	sign;
+
+	sign = 1;
+	if (str[*i] == '-' || str[*i] == '+')
+	{
+		if (str[*i] == '-')
+			sign = -1;
+		(*i)++;
+	}
+	return (sign);
+}
+
+static int	convert_int(char *str, int *value)
+{
+	long	nb;
+	int		sign;
 	int		i;
 
+	nb = 0;
 	i = 0;
-	if (str[i] == '-' || str[i] == '+')
-		i++;
+	sign = get_sign(str, &i);
 	if (!str[i])
-		exit_error(prog);
+		return (0);
 	while (str[i])
 	{
 		if (!ft_isdigit(str[i]))
-			exit_error(prog);
+			return (0);
+		nb = (nb * 10) + (str[i] - '0');
+		if ((sign == 1 && nb > 2147483647) || nb > 2147483648)
+			return (0);
 		i++;
 	}
-	num = ft_atol(str);
-	if (num < -2147483648 || num > 2147483647)
-		exit_error(prog);
-	return ((int)num);
+	*value = (int)(nb * sign);
+	return (1);
 }
 
-// 5. Función principal que recorre la matriz de texto e inserta los nodos en A
+static int	has_duplicate(t_stack *stack, int value)
+{
+	while (stack)
+	{
+		if (stack->value == value)
+			return (1);
+		stack = stack->next;
+	}
+	return (0);
+}
+
+static void	parse_error(char **matrix, t_program *prog, int is_split)
+{
+	if (is_split)
+		free_matrix(matrix);
+	exit_error(prog);
+}
+
 void	parse_matrix(char **matrix, t_program *prog, int is_split)
 {
-	int		i;
-	int		val;
-	t_stack	*current;
+	int	i;
+	int	value;
 
 	i = 0;
 	if (!matrix || !matrix[0])
-		exit_error(prog);
+		parse_error(matrix, prog, is_split);
 	while (matrix[i])
 	{
-		val = validate_and_atoi(matrix[i], prog);
-		current = prog->a;
-		while (current)
-		{
-			if (current->value == val)
-				exit_error(prog);
-			current = current->next;
-		}
-		append_node(&(prog->a), val);
+		if (!convert_int(matrix[i], &value))
+			parse_error(matrix, prog, is_split);
+		if (has_duplicate(prog->a, value))
+			parse_error(matrix, prog, is_split);
+		if (!append_node(&(prog->a), value))
+			parse_error(matrix, prog, is_split);
 		i++;
 	}
 	if (is_split)

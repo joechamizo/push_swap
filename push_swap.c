@@ -3,20 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   push_swap.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: joaqumar <joaqumar@student.42barcelona.co  +#+  +:+       +#+        */
+/*   By: acoromin <acoromin@student.42barcelona.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/05/18 14:00:59 by joaqumar          #+#    #+#             */
-/*   Updated: 2026/05/18 14:45:02 by joaqumar         ###   ########.fr       */
+/*   Created: 2026/05/20 00:00:00 by acoromin          #+#    #+#             */
+/*   Updated: 2026/05/20 00:00:00 by acoromin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
 
-/**
- * Rellena con ceros la memoria de la estructura para asegurar una 
- * inicialización limpia sin valores basura de la pila.
- */
-static void	init_program_struct(t_program *prog)
+static void	init_program(t_program *prog)
 {
 	int	i;
 
@@ -35,29 +31,29 @@ static void	init_program_struct(t_program *prog)
 	}
 }
 
-/**
- * Función auxiliar para realizar el ft_split básico en caso de cadena única.
- * Nota: Debes enlazar aquí tu propio split de la libft o el tuyo personalizado.
- */
-extern char	**ft_split(char const *s, char c);
+static void	parse_input(int argc, char **argv, t_program *prog)
+{
+	int	i;
+
+	i = 1;
+	while (i < argc && parse_flag(argv[i], prog))
+		i++;
+	if (i == argc)
+		return ;
+	if (i == argc - 1 && ft_strchr(argv[i], ' '))
+		parse_matrix(ft_split(argv[i], ' '), prog, 1);
+	else
+		parse_matrix(&argv[i], prog, 0);
+}
 
 int	main(int argc, char **argv)
 {
 	t_program	prog;
-	int			i;
 
 	if (argc < 2)
 		return (0);
-	init_program_struct(&prog);
-	i = 1;
-	while (i < argc && parse_flag(argv[i], &prog))
-		i++;
-	if (i == argc)
-		return (0);
-	if (i == argc - 1 && ft_strchr(argv[i], ' '))
-		parse_matrix(ft_split(argv[i], ' '), &prog, 1);
-	else
-		parse_matrix(&argv[i], &prog, 0);
+	init_program(&prog);
+	parse_input(argc, argv, &prog);
 	prog.initial_size = get_stack_size(prog.a);
 	prog.disorder_index = calculate_disorder(prog.a, prog.initial_size);
 	init_indices(&prog);

@@ -3,124 +3,67 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: joaqumar <joaqumar@student.42barcelona.co  +#+  +:+       +#+         #
+#    By: acoromin <acoromin@student.42barcelona.    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2026/05/18 14:29:00 by joaqumar          #+#    #+#              #
-#    Updated: 2026/05/18 14:36:24 by joaqumar         ###   ########.fr        #
+#    Created: 2026/05/20 00:00:00 by acoromin          #+#    #+#              #
+#    Updated: 2026/05/20 00:00:00 by acoromin         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-# ============================================================================ #
-#                                   VARIABLES                                  #
-# ============================================================================ #
+NAME = push_swap
+BONUS_NAME = checker
+CC = cc
+CFLAGS = -Wall -Wextra -Werror
+INCLUDES = -I.
+SRC_DIR = srcs
+OBJ_DIR = obj
 
-NAME        = push_swap
-BONUS_NAME  = checker
-CC          = gcc
-CFLAGS      = -Wall -Wextra -Werror -I.
+SRCS = push_swap.c \
+	$(SRC_DIR)/parser.c \
+	$(SRC_DIR)/operations.c \
+	$(SRC_DIR)/handlers.c \
+	$(SRC_DIR)/router.c \
+	$(SRC_DIR)/indexing.c \
+	$(SRC_DIR)/strategies.c \
+	$(SRC_DIR)/strategies_utils.c \
+	$(SRC_DIR)/benchmark.c \
+	$(SRC_DIR)/memory.c \
+	$(SRC_DIR)/utils.c
 
-# Directorios
-OBJ_DIR     = obj
-SRC_DIR     = srcs
+BONUS_SRCS = checker.c \
+	$(SRC_DIR)/parser.c \
+	$(SRC_DIR)/operations.c \
+	$(SRC_DIR)/handlers.c \
+	$(SRC_DIR)/router.c \
+	$(SRC_DIR)/indexing.c \
+	$(SRC_DIR)/strategies.c \
+	$(SRC_DIR)/strategies_utils.c \
+	$(SRC_DIR)/benchmark.c \
+	$(SRC_DIR)/memory.c \
+	$(SRC_DIR)/utils.c
 
-# Ficheros Fuente Básicos (Separados estrictamente por ubicación)
-SRC_MAIN    = push_swap.c
-SRC_CHECKER = checker.c
-
-SRC_SRCS    = parser.c \
-              operations.c \
-              handlers.c \
-              router.c \
-              indexing.c \
-              strategies.c \
-              strategies_utils.c \
-              benchmark.c \
-              memory.c \
-              utils.c
-
-# Mapeo Absoluto de Objetos (Evita que Clang se pierda con las rutas)
-OBJ_M       = $(OBJ_DIR)/push_swap.o
-OBJ_C       = $(OBJ_DIR)/checker.o
-OBJ_S       = $(SRC_SRCS:%.c=$(OBJ_DIR)/$(SRC_DIR)/%.o)
-
-# Combinaciones Finales de Objetos para enlazar
-OBJ         = $(OBJ_M) $(OBJ_S)
-OBJ_BONUS   = $(OBJ_C) $(OBJ_S)
-
-# Variables para la barra de progreso
-TOTAL_FILES = $(words $(OBJ))
-COMPILED_FILES = 0
-
-# Colores e Iconos ANSI
-CLR_RESET   = \033[0m
-CLR_GREEN   = \033[32m
-CLR_CYAN    = \033[36m
-CLR_YELLOW  = \033[33m
-CLR_RED     = \033[31m
-CLR_BOLD    = \033[1m
-
-ICON_INFO    = ⚙️
-ICON_CLEAN   = 🗑️
-ICON_BUILD   = 🚀
-
-# ============================================================================ #
-#                                    REGLAS                                    #
-# ============================================================================ #
+OBJS = $(SRCS:%.c=$(OBJ_DIR)/%.o)
+BONUS_OBJS = $(BONUS_SRCS:%.c=$(OBJ_DIR)/%.o)
 
 all: $(NAME)
 
-# Vinculación de push_swap
-$(NAME): $(OBJ)
-	@PERCENT=100; \
-	BAR=$$(printf "■%.0s" {1..20}); \
-	printf "\r$(ICON_INFO) $(CLR_CYAN)Compilando: $(CLR_BOLD)[$${BAR}] $${PERCENT}%%$(CLR_RESET) ($(TOTAL_FILES)/$(TOTAL_FILES)) \n"
-	@$(CC) $(CFLAGS) $(OBJ) -o $(NAME)
-	@echo "$(CLR_GREEN)$(ICON_BUILD) $(CLR_BOLD)[$(NAME) CREADO CON ÉXITO]$(CLR_RESET)"
+$(NAME): $(OBJS)
+	$(CC) $(CFLAGS) $(OBJS) -o $(NAME)
 
-# Vinculación de checker (Bonus)
-bonus: TOTAL_FILES = $(words $(OBJ_BONUS))
 bonus: $(BONUS_NAME)
 
-$(BONUS_NAME): $(OBJ_BONUS)
-	@PERCENT=100; \
-	BAR=$$(printf "■%.0s" {1..20}); \
-	printf "\r$(ICON_INFO) $(CLR_CYAN)Compilando: $(CLR_BOLD)[$${BAR}] $${PERCENT}%%$(CLR_RESET) ($(TOTAL_FILES)/$(TOTAL_FILES)) \n"
-	@$(CC) $(CFLAGS) $(OBJ_BONUS) -o $(BONUS_NAME)
-	@echo "$(CLR_GREEN)🤖 $(CLR_BOLD)[$(BONUS_NAME) BONUS CREADO CON ÉXITO]$(CLR_RESET)"
+$(BONUS_NAME): $(BONUS_OBJS)
+	$(CC) $(CFLAGS) $(BONUS_OBJS) -o $(BONUS_NAME)
 
-# Regla mágica: Fuerza la creación real del árbol de carpetas en el disco duro
-$(OBJ_DIR) $(OBJ_DIR)/$(SRC_DIR):
-	@mkdir -p $@
-
-# Regla 1: Compila los archivos sueltos de la raíz (.c -> .o)
 $(OBJ_DIR)/%.o: %.c push_swap.h
-	@mkdir -p $(dir $@)
-	@$(CC) $(CFLAGS) -c $< -o $@
-	$(eval COMPILED_FILES=$(shell expr $(COMPILED_FILES) + 1))
-	@PERCENT=`expr $(COMPILED_FILES) \* 100 / $(TOTAL_FILES)`; \
-	PROGRESS=`expr $(COMPILED_FILES) \* 20 / $(TOTAL_FILES)`; \
-	BAR=`printf "■%.0s" \`seq 1 $$PROGRESS\``; \
-	SPACES=`printf " %.0s" \`seq 1 \`expr 20 - $$PROGRESS\`\``; \
-	printf "\r$(ICON_INFO) $(CLR_CYAN)Compilando: $(CLR_BOLD)[$${BAR}$${SPACES}] $${PERCENT}%%$(CLR_RESET) ($(COMPILED_FILES)/$(TOTAL_FILES)) <$<>"
-
-# Regla 2: Compila los archivos dentro de srcs/ (srcs/.c -> obj/srcs/.o)
-$(OBJ_DIR)/$(SRC_DIR)/%.o: $(SRC_DIR)/%.c push_swap.h
-	@mkdir -p $(dir $@)
-	@$(CC) $(CFLAGS) -c $< -o $@
-	$(eval COMPILED_FILES=$(shell expr $(COMPILED_FILES) + 1))
-	@PERCENT=`expr $(COMPILED_FILES) \* 100 / $(TOTAL_FILES)`; \
-	PROGRESS=`expr $(COMPILED_FILES) \* 20 / $(TOTAL_FILES)`; \
-	BAR=`printf "■%.0s" \`seq 1 $$PROGRESS\``; \
-	SPACES=`printf " %.0s" \`seq 1 \`expr 20 - $$PROGRESS\`\``; \
-	printf "\r$(ICON_INFO) $(CLR_CYAN)Compilando: $(CLR_BOLD)[$${BAR}$${SPACES}] $${PERCENT}%%$(CLR_RESET) ($(COMPILED_FILES)/$(TOTAL_FILES)) <$<>"
+	mkdir -p $(dir $@)
+	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 clean:
-	@rm -rf $(OBJ_DIR)
-	@echo "$(CLR_YELLOW)$(ICON_CLEAN) Archivos objeto (.o) eliminados correctamente.$(CLR_RESET)"
+	rm -rf $(OBJ_DIR)
 
 fclean: clean
-	@rm -f $(NAME) $(BONUS_NAME)
-	@echo "$(CLR_RED)$(ICON_CLEAN) Ejecutables [$(NAME)] y [$(BONUS_NAME)] destruidos.$(CLR_RESET)"
+	rm -f $(NAME) $(BONUS_NAME)
 
 re: fclean all
 

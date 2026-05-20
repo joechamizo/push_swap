@@ -3,19 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   checker.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: joaqumar <joaqumar@student.42barcelona.co  +#+  +:+       +#+        */
+/*   By: acoromin <acoromin@student.42barcelona.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/05/18 14:24:56 by joaqumar          #+#    #+#             */
-/*   Updated: 2026/05/18 14:25:01 by joaqumar         ###   ########.fr       */
+/*   Created: 2026/05/20 00:00:00 by acoromin          #+#    #+#             */
+/*   Updated: 2026/05/20 00:00:00 by acoromin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
 
-/*
-** Lee carácter a carácter desde stdin (fd 0) hasta encontrar un '\n'
-** Simula un get_next_line básico y normativo para el checker.
-*/
 static int	read_line(int fd, char *buffer)
 {
 	int		i;
@@ -28,47 +24,58 @@ static int	read_line(int fd, char *buffer)
 	{
 		if (c == '\n')
 			break ;
-		buffer[i++] = c;
+		if (i >= 1023)
+			return (-1);
+		buffer[i] = c;
+		i++;
 		bytes_read = read(fd, &c, 1);
 	}
 	buffer[i] = '\0';
+	if (bytes_read == 0 && i > 0)
+		return (1);
 	return (bytes_read);
 }
 
-/*
-** Recibe la instrucción escrita en la terminal y la ejecuta internamente
-** Pasamos '0' en el parámetro print para que NO imprima nada en stdout.
-*/
 static void	read_and_execute(t_program *prog)
 {
 	char	buffer[1024];
+	int		status;
 
-	while (read_line(0, buffer) > 0)
+	status = read_line(0, buffer);
+	while (status > 0)
 	{
-		if (buffer[0] == '\0')
-			continue ;
-		execute_op(buffer, prog, 0);
+		if (buffer[0] != '\0')
+			execute_op(buffer, prog, 0);
+		status = read_line(0, buffer);
 	}
+	if (status < 0)
+		exit_error(prog);
+}
+
+static void	parse_checker_input(int argc, char **argv, t_program *prog)
+{
+	int	i;
+
+	i = 1;
+	while (i < argc && parse_flag(argv[i], prog))
+		i++;
+	if (i == argc)
+		return ;
+	if (i == argc - 1 && ft_strchr(argv[i], ' '))
+		parse_matrix(ft_split(argv[i], ' '), prog, 1);
+	else
+		parse_matrix(&argv[i], prog, 0);
 }
 
 int	main(int argc, char **argv)
 {
 	t_program	prog;
-	int			i;
 
 	if (argc < 2)
 		return (0);
 	ft_memset(&prog, 0, sizeof(t_program));
 	prog.strategy = STRAT_ADAPTIVE;
-	i = 1;
-	while (i < argc && parse_flag(argv[i], &prog))
-		i++;
-	if (i == argc)
-		return (0);
-	if (i == argc - 1 && ft_strchr(argv[i], ' '))
-		parse_matrix(ft_split(argv[i], ' '), &prog, 1);
-	else
-		parse_matrix(&argv[i], &prog, 0);
+	parse_checker_input(argc, argv, &prog);
 	read_and_execute(&prog);
 	if (is_sorted(prog.a) && !prog.b)
 		write(1, "OK\n", 3);

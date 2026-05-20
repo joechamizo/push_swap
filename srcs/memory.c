@@ -3,19 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   memory.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: joaqumar <joaqumar@student.42barcelona.co  +#+  +:+       +#+        */
+/*   By: acoromin <acoromin@student.42barcelona.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/05/18 13:52:05 by joaqumar          #+#    #+#             */
-/*   Updated: 2026/05/18 14:42:56 by joaqumar         ###   ########.fr       */
+/*   Created: 2026/05/20 00:00:00 by acoromin          #+#    #+#             */
+/*   Updated: 2026/05/20 00:00:00 by acoromin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
 
-/**
- * Libera de forma recursiva o iterativa todos los nodos de un stack.
- * Coloca el puntero raíz a NULL para evitar punteros colgantes (dangling pointers).
- */
 void	free_stack(t_stack **stack)
 {
 	t_stack	*current;
@@ -48,10 +44,6 @@ void	*ft_memset(void *b, int c, size_t len)
 	return (b);
 }
 
-/**
- * Libera una matriz de strings (char **) generada por ft_split.
- * Se asegura de liberar cada cadena individual antes de liberar el contenedor.
- */
 void	free_matrix(char **matrix)
 {
 	int	i;
@@ -67,11 +59,6 @@ void	free_matrix(char **matrix)
 	free(matrix);
 }
 
-/**
- * Función centralizada para salidas por Error de la Norma de 42.
- * Escribe "Error\n" en stderr (descriptor 2) y finaliza con código 1.
- * Si necesitas liberar prog antes de salir, puedes pasarle su dirección.
- */
 void	exit_error(t_program *prog)
 {
 	if (prog)

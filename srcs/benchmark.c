@@ -3,37 +3,43 @@
 /*                                                        :::      ::::::::   */
 /*   benchmark.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: joaqumar <joaqumar@student.42barcelona.co  +#+  +:+       +#+        */
+/*   By: acoromin <acoromin@student.42barcelona.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/05/18 14:05:55 by joaqumar          #+#    #+#             */
-/*   Updated: 2026/05/18 14:06:01 by joaqumar         ###   ########.fr       */
+/*   Created: 2026/05/20 00:00:00 by acoromin          #+#    #+#             */
+/*   Updated: 2026/05/20 00:00:00 by acoromin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
-#include <stdio.h>
 
-/**
- * Escribe una cadena de caracteres en el descriptor de archivo especificado.
- */
 void	ft_putstr_fd(char *s, int fd)
 {
-	size_t	i;
-
 	if (!s)
 		return ;
-	i = 0;
-	while (s[i])
+	while (*s)
 	{
-		write(fd, &s[i], 1);
-		i++;
+		write(fd, s, 1);
+		s++;
 	}
 }
 
-/**
- * Busca la primera aparición de un carácter en una cadena.
- * Devuelve un puntero a dicha posición o NULL si no lo encuentra.
- */
+void	ft_putnbr_fd(int n, int fd)
+{
+	long	nb;
+	char	c;
+
+	nb = n;
+	if (nb < 0)
+	{
+		write(fd, "-", 1);
+		nb = -nb;
+	}
+	if (nb >= 10)
+		ft_putnbr_fd(nb / 10, fd);
+	c = (nb % 10) + '0';
+	write(fd, &c, 1);
+}
+
 char	*ft_strchr(const char *s, int c)
 {
 	while (*s)
@@ -47,11 +53,6 @@ char	*ft_strchr(const char *s, int c)
 	return (NULL);
 }
 
-/**
- * Calcula el índice de desorden inicial (porcentaje de inversiones).
- * Recorre todas las parejas posibles en el stack. Si el de arriba es mayor
- * que el de abajo, se contabiliza como una inversión.
- */
 double	calculate_disorder(t_stack *stack, int size)
 {
 	t_stack	*i;
@@ -78,33 +79,34 @@ double	calculate_disorder(t_stack *stack, int size)
 	return (((double)inversions / total_pairs) * 100.0);
 }
 
-/**
- * Imprime el reporte final con el desglose exacto de movimientos en stderr.
- * Solo se invoca si prog->bench_mode está activo.
- */
+static void	print_op_count(t_program *prog, char *name, int index)
+{
+	if (prog->op_counts[index] > 0)
+	{
+		ft_putstr_fd(name, 2);
+		ft_putstr_fd(": ", 2);
+		ft_putnbr_fd(prog->op_counts[index], 2);
+		ft_putstr_fd("\n", 2);
+	}
+}
+
 void	print_benchmark(t_program *prog)
 {
-	char	*names[4];
-	char	*complexities[4];
-	char	*ops[11];
-	int		i;
-
-	names[0] = "Adaptativo"; names[1] = "Simple";
-	names[2] = "Intermedio"; names[3] = "Complejo";
-	complexities[0] = "Dependiente del input"; complexities[1] = "O(n²)";
-	complexities[2] = "O(n√n)"; complexities[3] = "O(n log n)";
-	ops[0] = "sa"; ops[1] = "sb"; ops[2] = "ss"; ops[3] = "pa"; ops[4] = "pb";
-	ops[5] = "ra"; ops[6] = "rb"; ops[7] = "rr"; ops[8] = "rra"; ops[9] = "rrb";
-	ops[10] = "rrr";
-	dprintf(2, "\n--- PUSH_SWAP BENCHMARK REPORT ---\n");
-	dprintf(2, "Índice de desorden inicial: %.2f%%\n", prog->disorder_index);
-	dprintf(2, "Estrategia empleada: %s (%s)\n",
-		names[prog->strategy], complexities[prog->strategy]);
-	dprintf(2, "Número total de operaciones: %d\n", prog->total_ops);
-	dprintf(2, "Desglose por tipo de movimiento:\n");
-	i = -1;
-	while (++i < 11)
-		if (prog->op_counts[i] > 0)
-			dprintf(2, "  [%s]: %d veces\n", ops[i], prog->op_counts[i]);
-	dprintf(2, "-----------------------------------\n\n");
+	ft_putstr_fd("\n--- PUSH_SWAP BENCHMARK ---\n", 2);
+	ft_putstr_fd("operations: ", 2);
+	ft_putnbr_fd(prog->total_ops, 2);
+	ft_putstr_fd("\ndisorder: ", 2);
+	ft_putnbr_fd((int)prog->disorder_index, 2);
+	ft_putstr_fd("%\n", 2);
+	print_op_count(prog, "sa", 0);
+	print_op_count(prog, "sb", 1);
+	print_op_count(prog, "ss", 2);
+	print_op_count(prog, "pa", 3);
+	print_op_count(prog, "pb", 4);
+	print_op_count(prog, "ra", 5);
+	print_op_count(prog, "rb", 6);
+	print_op_count(prog, "rr", 7);
+	print_op_count(prog, "rra", 8);
+	print_op_count(prog, "rrb", 9);
+	print_op_count(prog, "rrr", 10);
 }

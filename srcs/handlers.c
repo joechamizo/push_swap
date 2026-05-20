@@ -1,15 +1,33 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   handlers.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: acoromin <acoromin@student.42barcelona.    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/05/20 00:00:00 by acoromin          #+#    #+#             */
+/*   Updated: 2026/05/20 00:00:00 by acoromin         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "push_swap.h"
 
-// Mapea la operación a su índice correspondiente para el array de contadores
 static int	get_op_index(char *op)
 {
 	char	*ops[11];
 	int		i;
 
-	ops[0] = "sa";  ops[1] = "sb";  ops[2] = "ss";
-	ops[3] = "pa";  ops[4] = "pb";
-	ops[5] = "ra";  ops[6] = "rb";  ops[7] = "rr";
-	ops[8] = "rra"; ops[9] = "rrb"; ops[10] = "rrr";
+	ops[0] = "sa";
+	ops[1] = "sb";
+	ops[2] = "ss";
+	ops[3] = "pa";
+	ops[4] = "pb";
+	ops[5] = "ra";
+	ops[6] = "rb";
+	ops[7] = "rr";
+	ops[8] = "rra";
+	ops[9] = "rrb";
+	ops[10] = "rrr";
 	i = 0;
 	while (i < 11)
 	{
@@ -63,25 +81,15 @@ static void	dispatch_to_core(char *op, t_program *prog)
 		dispatch_doubles(op, prog);
 }
 
-
-/**
- * Manejador principal accesible por tus algoritmos.
- * Modifica los stacks, lleva la cuenta del benchmark e imprime el movimiento.
- */
 void	execute_op(char *op, t_program *prog, int print)
 {
 	int	op_idx;
 
-	// 1. Ejecutar la mutación de los nodos
 	dispatch_to_core(op, prog);
-
-	// 2. Auditoría estadística para el modo --bench
 	prog->total_ops++;
 	op_idx = get_op_index(op);
 	if (op_idx != -1)
 		prog->op_counts[op_idx]++;
-
-	// 3. Salida por terminal exigida por las reglas estándar de Push_swap
 	if (print)
 	{
 		ft_putstr_fd(op, 1);
