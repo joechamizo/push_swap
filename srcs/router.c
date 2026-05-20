@@ -33,13 +33,13 @@ int	is_sorted(t_stack *stack)
 // Lógica de decisión para el comportamiento por defecto (--adaptive)
 static void	execute_adaptive(t_program *prog, int size)
 {
-	// 1. Si son 3 o menos elementos, O(n²) es óptimo y directo
-	if (size <= 3)
+	// 1. Tamaños <= 5 SIEMPRE deben usar sort_simple (red de comparación/selección)
+	if (size <= 5)
 		sort_simple(prog);
-	// 2. Si el desorden es muy bajo, un algoritmo adaptativo tipo inserción O(n²) rinde mejor
+	// 2. Si el desorden es muy bajo en tamaños mayores, inserción rinde mejor
 	else if (prog->disorder_index < 15.0)
 		sort_simple(prog);
-	// 3. Tamaños intermedios (ej. menores a 100 elementos)
+	// 3. Tamaños intermedios (ej. de 6 a 100 elementos)
 	else if (size <= 100)
 		sort_medium(prog);
 	// 4. Grandes volúmenes de datos con alto desorden

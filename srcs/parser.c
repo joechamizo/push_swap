@@ -6,7 +6,7 @@
 /*   By: joaqumar <joaqumar@student.42barcelona.co  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/18 14:02:41 by joaqumar          #+#    #+#             */
-/*   Updated: 2026/05/18 14:02:45 by joaqumar         ###   ########.fr       */
+/*   Updated: 2026/05/20 17:57:33 by joaqumar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ char	**ft_split(char const *s, char c)
 	i = 0;
 	j = 0;
 	s_word = -1;
-	while (i <= ft_strlen(s))
+	while (s[i])
 	{
 		if (s[i] != c && s_word < 0)
 			s_word = i;
@@ -77,6 +77,8 @@ char	**ft_split(char const *s, char c)
 		}
 		i++;
 	}
+	if (s_word >= 0)
+		result[j++] = get_word(s, s_word, i);
 	result[j] = NULL;
 	return (result);
 }

@@ -20,27 +20,49 @@ static int	get_op_index(char *op)
 	return (-1);
 }
 
-// Sub-manejador encargado de desviar la ejecución a las operaciones CORE
-static void	dispatch_to_core(char *op, t_program *prog)
+static void	dispatch_doubles(char *op, t_program *prog)
 {
-	// Operaciones SWAP (tipo 1)
-	if (ft_strcmp(op, "sa") == 0)        apply_core_op(1, &(prog->a), NULL);
-	else if (ft_strcmp(op, "sb") == 0)   apply_core_op(1, &(prog->b), NULL);
-	else if (ft_strcmp(op, "ss") == 0)   (apply_core_op(1, &(prog->a), NULL), apply_core_op(1, &(prog->b), NULL));
-	// Operaciones PUSH (tipo 2)
-	else if (ft_strcmp(op, "pa") == 0)   apply_core_op(2, &(prog->a), &(prog->b));
-	else if (ft_strcmp(op, "pb") == 0)   apply_core_op(2, &(prog->b), &(prog->a));
-	// Operaciones ROTATE (tipo 3)
-	else if (ft_strcmp(op, "ra") == 0)   apply_core_op(3, &(prog->a), NULL);
-	else if (ft_strcmp(op, "rb") == 0)   apply_core_op(3, &(prog->b), NULL);
-	else if (ft_strcmp(op, "rr") == 0)   (apply_core_op(3, &(prog->a), NULL), apply_core_op(3, &(prog->b), NULL));
-	// Operaciones REVERSE ROTATE (tipo 4)
-	else if (ft_strcmp(op, "rra") == 0)  apply_core_op(4, &(prog->a), NULL);
-	else if (ft_strcmp(op, "rrb") == 0)  apply_core_op(4, &(prog->b), NULL);
-	else if (ft_strcmp(op, "rrr") == 0)  (apply_core_op(4, &(prog->a), NULL), apply_core_op(4, &(prog->b), NULL));
+	if (ft_strcmp(op, "ss") == 0)
+	{
+		apply_core_op(1, &(prog->a), NULL);
+		apply_core_op(1, &(prog->b), NULL);
+	}
+	else if (ft_strcmp(op, "rr") == 0)
+	{
+		apply_core_op(3, &(prog->a), NULL);
+		apply_core_op(3, &(prog->b), NULL);
+	}
+	else if (ft_strcmp(op, "rrr") == 0)
+	{
+		apply_core_op(4, &(prog->a), NULL);
+		apply_core_op(4, &(prog->b), NULL);
+	}
 	else
 		exit_error(prog);
 }
+
+static void	dispatch_to_core(char *op, t_program *prog)
+{
+	if (ft_strcmp(op, "sa") == 0)
+		apply_core_op(1, &(prog->a), NULL);
+	else if (ft_strcmp(op, "sb") == 0)
+		apply_core_op(1, &(prog->b), NULL);
+	else if (ft_strcmp(op, "pa") == 0)
+		apply_core_op(2, &(prog->a), &(prog->b));
+	else if (ft_strcmp(op, "pb") == 0)
+		apply_core_op(2, &(prog->b), &(prog->a));
+	else if (ft_strcmp(op, "ra") == 0)
+		apply_core_op(3, &(prog->a), NULL);
+	else if (ft_strcmp(op, "rb") == 0)
+		apply_core_op(3, &(prog->b), NULL);
+	else if (ft_strcmp(op, "rra") == 0)
+		apply_core_op(4, &(prog->a), NULL);
+	else if (ft_strcmp(op, "rrb") == 0)
+		apply_core_op(4, &(prog->b), NULL);
+	else
+		dispatch_doubles(op, prog);
+}
+
 
 /**
  * Manejador principal accesible por tus algoritmos.

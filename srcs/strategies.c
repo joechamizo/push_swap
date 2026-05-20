@@ -38,6 +38,24 @@ void	sort_three(t_program *prog)
 }
 
 /**
+ * Encuentra la posición actual (índice base 0) de un target_index en la pila.
+ */
+static int	get_pos(t_stack *stack, int target_index)
+{
+	int	pos;
+
+	pos = 0;
+	while (stack)
+	{
+		if (stack->index == target_index)
+			return (pos);
+		stack = stack->next;
+		pos++;
+	}
+	return (0);
+}
+
+/**
  * STRAT_SIMPLE: Extensión O(n²) para tamaños pequeños (hasta 5 elementos).
  * Busca y empuja de forma secuencial el índice 0 (y luego el 1) al Stack B.
  */
@@ -56,7 +74,7 @@ void	sort_simple(t_program *prog)
 	{
 		while (prog->a->index != target)
 		{
-			if (prog->a->next->index == target || (prog->a->next->next && prog->a->next->next->index == target))
+			if (get_pos(prog->a, target) <= get_stack_size(prog->a) / 2)
 				execute_op("ra", prog, 1);
 			else
 				execute_op("rra", prog, 1);
@@ -80,11 +98,10 @@ void	sort_medium(t_program *prog)
 	int	i;
 
 	size = get_stack_size(prog->a);
-	// Aproximación lineal de la raíz cuadrada para evitar math.h
 	chunk_size = 1;
 	while (chunk_size * chunk_size < size)
 		chunk_size++;
-	chunk_size *= 2; // Ajuste empírico de ventana óptimo para ~100 elementos
+	chunk_size *= 2;
 	i = 0;
 	while (prog->a)
 	{
@@ -102,7 +119,6 @@ void	sort_medium(t_program *prog)
 		else
 			execute_op("ra", prog, 1);
 	}
-	// ... Aquí falta la función auxiliar para retornar todo ordenado al Stack A ...
 	return_to_a(prog);
 }
 
