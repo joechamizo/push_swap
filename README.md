@@ -2,12 +2,6 @@
 
 # Push_swap
 
-<p align="center">
-  <img src="https://shields.io" alt="Score 100/100">
-  <img src="https://shields.io" alt="Norminette">
-  <img src="https://shields.io" alt="Leaks None">
-</p>
-
 ## 👥 División del Trabajo y Colaboración (50% / 50%)
 
 Para garantizar el cumplimiento normativo de la Escuela 42 y un desarrollo equilibrado del software, el proyecto se estructuró en dos grandes bloques de responsabilidad técnica complementaria:
