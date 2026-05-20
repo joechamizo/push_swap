@@ -6,7 +6,7 @@
 /*   By: acoromin <acoromin@student.42barcelona.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/20 00:00:00 by acoromin          #+#    #+#             */
-/*   Updated: 2026/05/20 00:00:00 by acoromin         ###   ########.fr       */
+/*   Updated: 2026/05/20 22:52:18 by joaqumar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,8 +46,6 @@ static void	execute_adaptive(t_program *prog, int size)
 		sort_simple(prog);
 	else
 		sort_medium(prog);
-	//else
-	//	sort_complex(prog);
 }
 
 void	execute_sorting_strategy(t_program *prog)

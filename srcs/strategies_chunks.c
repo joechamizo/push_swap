@@ -6,7 +6,7 @@
 /*   By: acoromin <acoromin@student.42barcelona.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/20 00:00:00 by acoromin          #+#    #+#             */
-/*   Updated: 2026/05/20 00:00:00 by acoromin         ###   ########.fr       */
+/*   Updated: 2026/05/20 22:52:59 by joaqumar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,9 +51,7 @@ void	sort_medium(t_program *prog)
 			i++;
 		}
 		else
-		{
 			execute_op("ra", prog, 1);
-		}
 	}
 	return_to_a(prog);
 }
