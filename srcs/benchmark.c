@@ -83,8 +83,9 @@ void	print_benchmark(t_program *prog)
 	ft_putstr_fd("operations: ", 2);
 	ft_putnbr_fd(prog->total_ops, 2);
 	ft_putstr_fd("\ndisorder: ", 2);
-	ft_putnbr_fd((int)prog->disorder_index, 2);
-	ft_putstr_fd("%\n", 2);
+	print_disorder(prog->disorder_index);
+	ft_putstr_fd("strategy: ", 2);
+	print_strategy_info(prog);
 	print_op_count(prog, "sa", 0);
 	print_op_count(prog, "sb", 1);
 	print_op_count(prog, "ss", 2);

@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   router.c                                           :+:      :+:    :+:   */
+/*   benchmark_utils.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: acoromin <acoromin@student.42barcelona.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -12,57 +12,33 @@
 
 #include "push_swap.h"
 
-int	get_stack_size(t_stack *stack)
+void	print_disorder(double value)
 {
-	int	size;
+	int	scaled;
+	int	decimal;
 
-	size = 0;
-	while (stack)
-	{
-		size++;
-		stack = stack->next;
-	}
-	return (size);
+	scaled = (int)(value * 100.0 + 0.5);
+	decimal = scaled % 100;
+	ft_putnbr_fd(scaled / 100, 2);
+	ft_putstr_fd(".", 2);
+	if (decimal < 10)
+		ft_putstr_fd("0", 2);
+	ft_putnbr_fd(decimal, 2);
+	ft_putstr_fd("%\n", 2);
 }
 
-int	is_sorted(t_stack *stack)
+void	print_strategy_info(t_program *prog)
 {
-	if (!stack)
-		return (1);
-	while (stack->next)
-	{
-		if (stack->value > stack->next->value)
-			return (0);
-		stack = stack->next;
-	}
-	return (1);
-}
-
-static void	execute_adaptive(t_program *prog, int size)
-{
-	if (size <= 5)
-		sort_simple(prog);
-	else if (prog->disorder_index < 15.0)
-		sort_simple(prog);
-	else
-		sort_medium(prog);
-	//else
-	//	sort_complex(prog);
-}
-
-void	execute_sorting_strategy(t_program *prog)
-{
-	int	size;
-
-	size = get_stack_size(prog->a);
-	if (size <= 1 || is_sorted(prog->a))
-		return ;
 	if (prog->strategy == STRAT_SIMPLE)
-		sort_simple(prog);
+		ft_putstr_fd("Simple / O(n^2)\n", 2);
 	else if (prog->strategy == STRAT_MEDIUM)
-		sort_medium(prog);
+		ft_putstr_fd("Medium / O(n sqrt(n))\n", 2);
 	else if (prog->strategy == STRAT_COMPLEX)
-		sort_complex(prog);
-	else if (prog->strategy == STRAT_ADAPTIVE)
-		execute_adaptive(prog, size);
+		ft_putstr_fd("Complex / O(n log n)\n", 2);
+	else if (prog->disorder_index < 20.0)
+		ft_putstr_fd("Adaptive / O(n)\n", 2);
+	else if (prog->disorder_index < 50.0)
+		ft_putstr_fd("Adaptive / O(n sqrt(n))\n", 2);
+	else
+		ft_putstr_fd("Adaptive / O(n log n)\n", 2);
 }

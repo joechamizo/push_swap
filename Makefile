@@ -1,122 +1,99 @@
-# **************************************************************************** #
-#                                                                              #
-#                                                         :::      ::::::::    #
-#    Makefile                                           :+:      :+:    :+:    #
-#                                                     +:+ +:+         +:+      #
-#    By: acoromin <acoromin@student.42barcelona.    +#+  +:+       +#+         #
-#                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2026/05/20 00:00:00 by acoromin          #+#    #+#              #
-#    Updated: 2026/05/20 19:03:52 by joaqumar         ###   ########.fr        #
-#                                                                              #
-# **************************************************************************** #
+NAME        = push_swap
+BONUS_NAME  = checker
+CC          = cc
+CFLAGS      = -Wall -Wextra -Werror
+INCLUDES    = -I.
+SRC_DIR     = srcs
+OBJ_DIR     = obj
 
-NAME = push_swap
-BONUS_NAME = checker
-CC = cc
-CFLAGS = -Wall -Wextra -Werror
-INCLUDES = -I.
-OBJ_DIR = obj
+SRCS        = push_swap.c \
+              $(SRC_DIR)/input.c \
+              $(SRC_DIR)/parser.c \
+              $(SRC_DIR)/split.c \
+              $(SRC_DIR)/operations.c \
+              $(SRC_DIR)/handlers.c \
+              $(SRC_DIR)/router.c \
+              $(SRC_DIR)/flags.c \
+              $(SRC_DIR)/indexing.c \
+              $(SRC_DIR)/strategies.c \
+              $(SRC_DIR)/strategies_chunks.c \
+              $(SRC_DIR)/strategies_radix.c \
+              $(SRC_DIR)/strategies_utils.c \
+              $(SRC_DIR)/benchmark.c \
+              $(SRC_DIR)/benchmark_utils.c \
+              $(SRC_DIR)/memory.c \
+              $(SRC_DIR)/utils.c \
+              $(SRC_DIR)/string_utils.c
 
-SRCS = push_swap.c \
-	srcs/parser.c \
-	srcs/split.c \
-	srcs/operations.c \
-	srcs/handlers.c \
-	srcs/router.c \
-	srcs/flags.c \
-	srcs/indexing.c \
-	srcs/strategies.c \
-	srcs/strategies_chunks.c \
-	srcs/strategies_radix.c \
-	srcs/strategies_utils.c \
-	srcs/benchmark.c \
-	srcs/memory.c \
-	srcs/utils.c \
-	srcs/string_utils.c
+BONUS_SRCS  = checker.c \
+              $(SRC_DIR)/input.c \
+              $(SRC_DIR)/parser.c \
+              $(SRC_DIR)/split.c \
+              $(SRC_DIR)/operations.c \
+              $(SRC_DIR)/handlers.c \
+              $(SRC_DIR)/router.c \
+              $(SRC_DIR)/flags.c \
+              $(SRC_DIR)/indexing.c \
+              $(SRC_DIR)/strategies.c \
+              $(SRC_DIR)/strategies_chunks.c \
+              $(SRC_DIR)/strategies_radix.c \
+              $(SRC_DIR)/strategies_utils.c \
+              $(SRC_DIR)/benchmark.c \
+              $(SRC_DIR)/benchmark_utils.c \
+              $(SRC_DIR)/memory.c \
+              $(SRC_DIR)/utils.c \
+              $(SRC_DIR)/string_utils.c
 
-BONUS_SRCS = checker.c \
-	srcs/parser.c \
-	srcs/split.c \
-	srcs/operations.c \
-	srcs/handlers.c \
-	srcs/router.c \
-	srcs/flags.c \
-	srcs/indexing.c \
-	srcs/strategies.c \
-	srcs/strategies_chunks.c \
-	srcs/strategies_radix.c \
-	srcs/strategies_utils.c \
-	srcs/benchmark.c \
-	srcs/memory.c \
-	srcs/utils.c \
-	srcs/string_utils.c
+OBJS        = $(patsubst %.c, $(OBJ_DIR)/%.o, $(SRCS))
+BONUS_OBJS  = $(patsubst %.c, $(OBJ_DIR)/%.o, $(BONUS_SRCS))
 
-OBJS = $(addprefix $(OBJ_DIR)/, $(SRCS:.c=.o))
-BONUS_OBJS = $(addprefix $(OBJ_DIR)/, $(BONUS_SRCS:.c=.o))
+# --- Variables de Progreso Universales ---
+TOTAL_FILES := $(words $(OBJS))
+COMPILED_FILES = 0
 
-# --- CONFIGURACIÓN DE LA BARRA DE PROGRESO ---
-TOTAL_FILES = $(words $(SRCS))
-CURRENT_FILE = 0
+# Colores ANSI y Emojis
+GREEN       = \033[1;32m
+BG_GREEN    = \033[42m
+BLUE        = \033[1;34m
+RED         = \033[1;31m
+WHITE       = \033[1;37m
+RESET       = \033[0m
+CLEAN_LINE  = \033[K
+TICK        = 🚀
+GEAR        = ⚙️
+TRASH       = 🗑️
 
-# --- COLORES ANSI ---
-RESET   = \033[0m
-RED     = \033[31m
-GREEN   = \033[32m
-YELLOW  = \033[33m
-BLUE    = \033[34m
-MAGENTA = \033[35m
-CYAN    = \033[36m
-BOLD    = \033[1m
-
-# --- ICONOS / EMOJIS ---
-ICON_START   = ⏳
-ICON_COMP    = ⚙️
-ICON_LINK    = 📦
-ICON_SUCCESS = 🎉
-ICON_CLEAN   = 🗑️
-ICON_FCLEAN  = 💥
-
-# --- REGLAS PRINCIPALES ---
 all: $(NAME)
 
 $(NAME): $(OBJS)
-	@env printf "\n$(ICON_LINK) $(CYAN)$(BOLD)Enlazando objetos para generar el binario...$(RESET)\n"
 	@$(CC) $(CFLAGS) $(OBJS) -o $(NAME)
-	@env printf "$(ICON_SUCCESS) $(GREEN)$(BOLD)¡Proyecto [%s] compilado con éxito!$(RESET)\n" "$(NAME)"
+	@printf "\r$(CLEAN_LINE)$(TICK) $(GREEN)$(NAME) compilado con éxito!$(RESET)\n"
 
+bonus: TOTAL_FILES := $(words $(BONUS_OBJS))
 bonus: $(BONUS_NAME)
 
-$(BONUS_NAME): TOTAL_FILES = $(words $(BONUS_SRCS))
 $(BONUS_NAME): $(BONUS_OBJS)
-	@env printf "\n$(ICON_LINK) $(MAGENTA)$(BOLD)Enlazando objetos para generar el bonus...$(RESET)\n"
 	@$(CC) $(CFLAGS) $(BONUS_OBJS) -o $(BONUS_NAME)
-	@env printf "$(ICON_SUCCESS) $(GREEN)$(BOLD)¡Bonus [%s] compilado con éxito!$(RESET)\n" "$(BONUS_NAME)"
+	@printf "\r$(CLEAN_LINE)$(TICK) $(GREEN)$(BONUS_NAME) compilado con éxito!$(RESET)\n"
 
-# --- COMPILACIÓN DE OBJETOS CON BARRA CORREGIDA PARA FISH/BASH ---
+# Regla con espacios puros pintados de verde para simular bloques sólidos
 $(OBJ_DIR)/%.o: %.c push_swap.h
 	@mkdir -p $(dir $@)
-	@$(eval CURRENT_FILE=$(shell echo $$(( $(CURRENT_FILE) + 1 ))))
-	@$(eval PERCENT=$(shell echo $$(( $(CURRENT_FILE) * 100 / $(TOTAL_FILES) ))))
-	@$(eval BAR_SIZE=$(shell echo $$(( $(CURRENT_FILE) * 20 / $(TOTAL_FILES) ))))
-	@$(eval REMAINING_SIZE=$(shell echo $$(( 20 - $(BAR_SIZE) ))))
+	@$(eval COMPILED_FILES=$(shell echo $$(($(COMPILED_FILES)+1))))
+	@$(eval PERCENT=$(shell echo $$(($(COMPILED_FILES)*100/$(TOTAL_FILES)))))
+	@$(eval NB_CHARS=$(shell echo $$(($(PERCENT)/5))))
 	@$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
-	@BAR_STR=""; \
-	if [ $(BAR_SIZE) -gt 0 ]; then BAR_STR=$$(printf '█%.0s' $$(seq 1 $(BAR_SIZE))); fi; \
-	EMPTY_STR=""; \
-	if [ $(REMAINING_SIZE) -gt 0 ]; then EMPTY_STR=$$(printf '░%.0s' $$(seq 1 $(REMAINING_SIZE))); fi; \
-	env printf "\r\033[K$(ICON_COMP) $(YELLOW)[%s%s] %3d%% (%d/%d) $(BOLD)Compilando:$(RESET) %-30s" \
-		"$$BAR_STR" "$$EMPTY_STR" "$(PERCENT)" "$(CURRENT_FILE)" "$(TOTAL_FILES)" "$<"
+	@BAR=""; i=0; while [ $$i -lt $(NB_CHARS) ]; do BAR="$$BAR "; i=$$((i+1)); done; \
+	SPACE=""; i=0; max_space=$$((20 - $(NB_CHARS))); while [ $$i -lt $$max_space ]; do SPACE="$$SPACE "; i=$$((i+1)); done; \
+	printf "\r$(CLEAN_LINE)$(GEAR) $(WHITE)Compilando: [$(BG_GREEN)%s$(RESET)%s] $(BLUE)%d%%$(RESET) (%s)" "$$BAR" "$$SPACE" "$(PERCENT)" "$<"
 
-# --- LIMPIEZA DETALLADA ---
 clean:
-	@env printf "$(ICON_CLEAN) $(RED)Eliminando directorio de objetos [%s]...$(RESET)\n" "$(OBJ_DIR)"
 	@rm -rf $(OBJ_DIR)
-	@env printf "$(GREEN)✓ Archivos objeto (.o) eliminados correctamente.$(RESET)\n"
+	@echo "$(TRASH) $(RED)Objetos limpiados.$(RESET)"
 
 fclean: clean
-	@env printf "$(ICON_FCLEAN) $(RED)Eliminando ejecutables finales...$(RESET)\n"
 	@rm -f $(NAME) $(BONUS_NAME)
-	@env printf "$(GREEN)✓ [%s] y [%s] eliminados de la raíz.$(RESET)\n" "$(NAME)" "$(BONUS_NAME)"
+	@echo "$(TRASH) $(RED)Ejecutables eliminados.$(RESET)"
 
 re: fclean all
 

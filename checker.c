@@ -52,21 +52,6 @@ static void	read_and_execute(t_program *prog)
 		exit_error(prog);
 }
 
-static void	parse_checker_input(int argc, char **argv, t_program *prog)
-{
-	int	i;
-
-	i = 1;
-	while (i < argc && parse_flag(argv[i], prog))
-		i++;
-	if (i == argc)
-		return ;
-	if (i == argc - 1 && ft_strchr(argv[i], ' '))
-		parse_matrix(ft_split(argv[i], ' '), prog, 1);
-	else
-		parse_matrix(&argv[i], prog, 0);
-}
-
 int	main(int argc, char **argv)
 {
 	t_program	prog;
@@ -75,7 +60,7 @@ int	main(int argc, char **argv)
 		return (0);
 	ft_memset(&prog, 0, sizeof(t_program));
 	prog.strategy = STRAT_ADAPTIVE;
-	parse_checker_input(argc, argv, &prog);
+	parse_checker_args(argc, argv, &prog);
 	read_and_execute(&prog);
 	if (is_sorted(prog.a) && !prog.b)
 		write(1, "OK\n", 3);

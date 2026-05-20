@@ -12,14 +12,28 @@
 
 #include "push_swap.h"
 
-static int	get_chunk_size(int size)
+static int	get_dynamic_chunk_size(int current_size)
 {
-	int	chunk_size;
+	if (current_size > 350)
+		return (45);
+	if (current_size > 200)
+		return (35);
+	if (current_size > 50)
+		return (23);
+	return (10);
+}
 
-	chunk_size = 1;
-	while (chunk_size * chunk_size < size)
-		chunk_size++;
-	return (chunk_size * 2);
+static void	push_to_b(t_program *prog, int i)
+{
+	if (prog->a->index <= i)
+	{
+		execute_op("pb", prog, 1);
+		execute_op("rb", prog, 1);
+	}
+	else
+	{
+		execute_op("pb", prog, 1);
+	}
 }
 
 void	sort_medium(t_program *prog)
@@ -27,23 +41,19 @@ void	sort_medium(t_program *prog)
 	int	chunk_size;
 	int	i;
 
-	chunk_size = get_chunk_size(get_stack_size(prog->a));
 	i = 0;
 	while (prog->a)
 	{
-		if (prog->a->index <= i)
+		chunk_size = get_dynamic_chunk_size(get_stack_size(prog->a));
+		if (prog->a->index <= i + chunk_size)
 		{
-			execute_op("pb", prog, 1);
-			execute_op("rb", prog, 1);
-			i++;
-		}
-		else if (prog->a->index <= i + chunk_size)
-		{
-			execute_op("pb", prog, 1);
+			push_to_b(prog, i);
 			i++;
 		}
 		else
+		{
 			execute_op("ra", prog, 1);
+		}
 	}
 	return_to_a(prog);
 }

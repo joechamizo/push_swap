@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   flags.c                                            :+:      :+:    :+:   */
+/*   input.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: acoromin <acoromin@student.42barcelona.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -12,38 +12,51 @@
 
 #include "push_swap.h"
 
-static int	set_strategy(char *arg, t_program *prog)
+static void	parse_value(char *arg, t_program *prog)
 {
-	t_strategy	strategy;
+	char	**matrix;
+	char	*single[2];
 
-	strategy = STRAT_ADAPTIVE;
-	if (ft_strcmp(arg, "--simple") == 0)
-		strategy = STRAT_SIMPLE;
-	else if (ft_strcmp(arg, "--medium") == 0)
-		strategy = STRAT_MEDIUM;
-	else if (ft_strcmp(arg, "--complex") == 0)
-		strategy = STRAT_COMPLEX;
-	else if (ft_strcmp(arg, "--adaptive") != 0)
-		return (0);
-	if (prog->strategy_set)
-		exit_error(prog);
-	prog->strategy = strategy;
-	prog->strategy_set = 1;
-	return (1);
+	if (ft_strchr(arg, ' '))
+	{
+		matrix = ft_split(arg, ' ');
+		parse_matrix(matrix, prog, 1);
+		return ;
+	}
+	single[0] = arg;
+	single[1] = NULL;
+	parse_matrix(single, prog, 0);
 }
 
-int	parse_flag(char *arg, t_program *prog)
+static void	parse_program_arg(char *arg, t_program *prog)
 {
-	if (arg[0] == '-' && arg[1] != '\0' && ft_isdigit(arg[1]))
-		return (0);
-	if (set_strategy(arg, prog))
-		return (1);
-	if (ft_strcmp(arg, "--bench") == 0)
+	if (parse_flag(arg, prog))
+		return ;
+	parse_value(arg, prog);
+}
+
+void	parse_program_args(int argc, char **argv, t_program *prog)
+{
+	int	i;
+
+	i = 1;
+	while (i < argc)
 	{
-		prog->bench_mode = 1;
-		return (1);
+		parse_program_arg(argv[i], prog);
+		i++;
 	}
-	if (arg[0] == '-')
+	if (!prog->a)
 		exit_error(prog);
-	return (0);
+}
+
+void	parse_checker_args(int argc, char **argv, t_program *prog)
+{
+	int	i;
+
+	i = 1;
+	while (i < argc)
+	{
+		parse_value(argv[i], prog);
+		i++;
+	}
 }

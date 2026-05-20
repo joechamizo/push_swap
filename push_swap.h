@@ -6,7 +6,7 @@
 /*   By: acoromin <acoromin@student.42barcelona.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/20 00:00:00 by acoromin          #+#    #+#             */
-/*   Updated: 2026/05/20 18:50:41 by joaqumar         ###   ########.fr       */
+/*   Updated: 2026/05/20 00:00:00 by acoromin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,14 +22,14 @@ typedef enum e_strategy
 	STRAT_SIMPLE,
 	STRAT_MEDIUM,
 	STRAT_COMPLEX
-}	t_strategy;
+} t_strategy;
 
 typedef struct s_stack
 {
 	int				value;
 	int				index;
 	struct s_stack	*next;
-}	t_stack;
+} t_stack;
 
 typedef struct s_program
 {
@@ -37,15 +37,18 @@ typedef struct s_program
 	t_stack		*b;
 	int			total_ops;
 	int			bench_mode;
+	int			strategy_set;
 	t_strategy	strategy;
 	int			op_counts[11];
 	int			initial_size;
 	double		disorder_index;
-}	t_program;
+} t_program;
 
 int		parse_flag(char *arg, t_program *prog);
 char	**ft_split(char const *s, char c);
 void	parse_matrix(char **matrix, t_program *prog, int is_split);
+void	parse_program_args(int argc, char **argv, t_program *prog);
+void	parse_checker_args(int argc, char **argv, t_program *prog);
 void	apply_core_op(int type, t_stack **dst_or_target, t_stack **src);
 void	execute_op(char *op, t_program *prog, int print);
 int		get_stack_size(t_stack *stack);
@@ -62,6 +65,8 @@ void	ft_putnbr_fd(int n, int fd);
 char	*ft_strchr(const char *s, int c);
 double	calculate_disorder(t_stack *stack, int size);
 void	print_benchmark(t_program *prog);
+void	print_strategy_info(t_program *prog);
+void	print_disorder(double value);
 void	free_stack(t_stack **stack);
 void	*ft_memset(void *b, int c, size_t len);
 void	free_matrix(char **matrix);

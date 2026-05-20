@@ -34,12 +34,12 @@ static void	move_max_to_top(t_program *prog, int size_b)
 	max_pos = get_max_pos(prog->b, size_b - 1);
 	if (max_pos <= size_b / 2)
 	{
-		while (prog->b->index != size_b - 1)
+		while (max_pos-- > 0)
 			execute_op("rb", prog, 1);
 	}
 	else
 	{
-		while (prog->b->index != size_b - 1)
+		while (max_pos++ < size_b)
 			execute_op("rrb", prog, 1);
 	}
 }
