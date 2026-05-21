@@ -89,11 +89,11 @@ $(OBJ_DIR)/%.o: %.c push_swap.h
 
 clean:
 	@rm -rf $(OBJ_DIR)
-	@echo "$(TRASH) $(RED)Objetos limpiados.$(RESET)"
+	@echo "$(TRASH) $(RED) Objetos limpiados.$(RESET)"
 
 fclean: clean
 	@rm -f $(NAME) $(BONUS_NAME)
-	@echo "$(TRASH) $(RED)Ejecutables eliminados.$(RESET)"
+	@echo "$(TRASH) $(RED) Ejecutables eliminados.$(RESET)"
 
 re: fclean all
 
