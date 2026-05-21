@@ -16,7 +16,7 @@
 # include <stdlib.h>
 # include <unistd.h>
 
-typedef enum e_strategy
+typedef enum s_strategy
 {
 	STRAT_ADAPTIVE,
 	STRAT_SIMPLE,

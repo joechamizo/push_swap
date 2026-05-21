@@ -1,121 +1,294 @@
-<!--* Este proyecto ha sido creado como parte del currículo de 42 tras una colaboración conjunta y equitativa al 50% por joaqumar y acoromin. *-->
+*This project was created as part of the 42 curriculum through an equal 50% collaboration by joaqumar and acoromin.*
 
 # Push_swap
 
-## 👥 División del Trabajo y Colaboración (50% / 50%)
+## 👥 Work Distribution and Collaboration (50% / 50%)
 
-Para garantizar el cumplimiento normativo de la Escuela 42 y un desarrollo equilibrado del software, el proyecto se estructuró en dos grandes bloques de responsabilidad técnica complementaria:
+To keep the project understandable, maintainable, and aligned with the 42 evaluation process, the work was divided into two complementary technical areas.
 
-### 👤 Colaboración de acoromin (50%) — Arquitectura Base y Control de Datos
-* **Estructura del Proyecto y Memoria:** Diseño e implementación del struct contenedor central `t_program` para encapsular datos de control de flujo sin recurrir a variables globales. Programación de los algoritmos de liberación de memoria en `memory.c` para mitigar fugas (*leaks*) bajo cualquier escenario de salida o error.
-* **Módulo de Parseo y Validación (`parser.c`):** Desarrollo del sistema de deserialización de matrices de argumentos. Gestión de strings complejos mediante `ft_split` y validación robusta ante desbordamientos numéricos extremos (`INT_MAX` / `INT_MIN`), strings vacíos y valores duplicados.
-* **Mapeo de Control e Índices (`indexing.c`):** Programación del algoritmo de indexación secuencial para pre-procesar los valores enteros reales de entrada a posiciones estables normalizadas de `0` a `size - 1`.
+### 👤 acoromin (50%) — Project Structure, Parsing, and Data Control
 
-### 👤 Colaboración de joaqumar (50%) — Operaciones Core y Lógica Algorítmica
-* **Mutaciones de Memoria y Despacho (`operations.c` y `handlers.c`):** Implementación de las operaciones estructurales primitivas (`core_swap`, `core_push`, `core_rotate`, `core_reverse_rotate`) y el despachador con contadores individuales integrados para el modo opcional estadístico `--bench`.
-* **Enrutador Inteligente (`router.c`):** Diseño de la toma de decisiones dinámicas basadas en el análisis en tiempo real de la longitud de la entrada y el cálculo estadístico del *Índice de Desorden Inicial*.
-* **Estrategias de Ordenación (`strategies_chunks.c` y `strategies_utils.c`):** Codificación matemática de la red de comparación cableada para 3 elementos, lógica para conjuntos menores o iguales a 5 elementos, y el algoritmo de ordenación avanzado de **Chunks Dinámicos Adaptativos**.
+- **Project structure and memory management:** Design and implementation of the central `t_program` structure, used to group the execution state without relying on global variables. Implementation of memory cleanup utilities to ensure that both stacks are freed correctly on normal exits and error paths.
+- **Parsing and validation:** Development of the argument parsing flow, including support for independent arguments, quoted strings containing several numbers, and optional flags. Validation covers empty arguments, invalid characters, integer overflow/underflow, and duplicated values.
+- **Indexing system:** Implementation of the preprocessing step that maps each input value to a stable index from `0` to `size - 1`, allowing the sorting algorithms to work with normalized values instead of raw integers.
 
----
+### 👤 joaqumar (50%) — Stack Operations and Sorting Logic
 
-## 📝 Descripción
-**Push_swap** es un proyecto de desarrollo de algoritmos de optimización en C cuyo objetivo es ordenar un conjunto de datos numéricos enteros aleatorios en un stack principal (Stack A) utilizando el menor número de instrucciones posible, auxiliándose de un stack secundario (Stack B).
-
-El proyecto aborda de forma práctica la manipulación eficiente de estructuras de datos lineales (listas enlazadas circulares dobles o arrays dinámicos), el análisis de la complejidad temporal y espacial $O(n \sqrt{n})$, y el diseño de software modular bajo restricciones estrictas de rendimiento (Norma de la Escuela 42).
+- **Core stack operations:** Implementation of the primitive Push_swap operations (`swap`, `push`, `rotate`, and `reverse rotate`) and their wrappers, including operation counting for the optional benchmark mode.
+- **Strategy routing:** Design of the strategy selection logic based on the selected command-line flag, the input size, and the initial disorder index.
+- **Sorting strategies:** Implementation of the simple strategy for small inputs, the chunk-based strategy for medium-sized inputs, and the radix-based strategy for larger or highly disordered inputs.
 
 ---
 
-## 📐 Decisiones Técnicas y Algorítmicas
+## 📝 Description
 
-El núcleo de este software radica en su arquitectura **Adaptativa**. Antes de realizar cualquier mutación en los stacks, el programa analiza la lista de entrada y calcula su nivel de entropía matemática mediante el porcentaje de inversiones.
+**Push_swap** is an algorithmic project written in C. The goal is to sort a list of integers stored in stack `a`, using a second stack `b` and a restricted set of operations, while producing as few operations as possible.
 
-### Justificación de los Algoritmos Seleccionados
+The project focuses on:
 
-1. **Estrategia Simple — Red de Comparación e Inserción ($O(n^2)$)**
-   * **Lógica:** Lógica directa (*hardcoded*) mediante evaluación combinatoria para $N=3$ (máximo 3 movimientos) e inserción directa localizando los valores mínimos globales para $N \le 5$ (máximo 12 movimientos).
-   * **Justificación:** Para conjuntos pequeños o con un índice de desorden menor al 15%, los algoritmos masivos rompen la estructura preordenada de forma ineficiente. Este enfoque mitiga el coste constante y garantiza la máxima puntuación en los tramos cortos de la hoja de evaluación.
+- linked-list stack manipulation;
+- pointer-safe node movement between stacks;
+- input parsing and error handling;
+- memory ownership and cleanup;
+- algorithmic complexity under the Push_swap operation model;
+- modular C code following the 42 Norm.
 
-2. **Estrategia Avanzada — Algoritmo de Chunks Dinámicos Adaptativos ($O(n\sqrt{n})$)**
-   * **Lógica:** Divide el rango de índices ordenados en bloques de tamaño variable calculados en tiempo real según los elementos restantes de la pila. El programa escanea el Stack A y envía elementos al Stack B si caen dentro de una ventana de proximidad móvil ("reloj de hourglass"). Los elementos con índices menores al promedio sufren un `rb` inmediato para pre-ordenar B en dos sub-bloques compactos.
-   * **Justificación:** Sustituye ventajosamente a Radix Sort en base 2. Mientras que Radix es rígido y requiere un número fijo de pasadas bit a bit que eleva los movimientos para 500 números a ~6700, la ventana dinámica adaptativa de Chunks aprovecha la proximidad reduciendo el tamaño del bloque a medida que A se vacía (desde 45 elementos hasta 10). La devolución se realiza de forma óptima calculando de forma bidireccional el camino más corto hacia el tope mediante `rb` o `rrb`.
-
-### Rendimiento Estadístico Obtenido (Tests de 500 números)
-* **Límite máximo permitido por 42:** 11,500 movimientos.
-* **Límite exigido para 5 estrellas (Máxima puntuación):** Menos de 5,500 movimientos.
-* **Métricas de nuestra implementación:**
-  * **Movimientos Mínimos:** 4,974
-  * **Movimientos Máximos:** 5,457 (Ningún test supera la barrera crítica)
-  * **Promedio Global:** 5,167
-  * **Puntuación del Tester:** **201/201 Tests Exitosos (5/5 Estrellas) 🥳✅**
+The program prints the sequence of operations needed to sort stack `a` in ascending order, with the smallest value ending at the top of the stack.
 
 ---
 
-## 🛠️ Instrucciones de Uso
+## 📐 Technical and Algorithmic Decisions
 
-### Requisitos previos
-* Compilador `clang` o `gcc` con soporte para flags `-Wall -Wextra -Werror`.
-* Herramienta de automatización `make`.
-* Sistema operativo basado en Unix (Linux o macOS).
+The project is built around a modular architecture. The input is parsed first, then each value is normalized through an index, and finally a sorting strategy is selected and executed.
 
-### Compilación e Instalación
-El sistema de construcción incluye un `Makefile` optimizado que evita el *relink* y muestra de forma interactiva la compilación modular de los fuentes.
+### Indexing
 
-1. Compilar el programa principal `push_swap`:
-   ```bash
-   make
-   ```
-2. Compilar el programa verificador de operaciones (Bonus) `checker`:
-   ```bash
-   make bonus
-   ```
-3. Limpiar los archivos objeto generados (`.o`):
-   ```bash
-   make clean
-   ```
-4. Realizar una limpieza total (objetos, librerías y binarios):
-   ```bash
-   make fclean
-   ```
+The input values are not sorted directly by their raw integer value. Instead, each node receives an `index` representing its position in the sorted order.
 
-### Modos de Ejecución
-El ejecutable acepta secuencias de números enteros tanto como argumentos independientes como estructurados en una única cadena entrecomillada. 
+Example:
 
-> 💡 **Flexibilidad del Parser:** Los selectores opcionales de estrategia y depuración se procesan e interpretan de manera **completamente independiente de la posición** en la que se introduzcan dentro de la línea de comandos (pueden enviarse al inicio, intercalados entre los números enteros o al final de la secuencia de argumentos).
+```text
+value: 100 -> 23 -> 1 -> 74 -> 923
+index:   3 ->  1 -> 0 ->  2 ->   4
+```
 
-* **Modo Adaptativo (Por Defecto):** Analiza la longitud y la entropía de los argumentos y aplica la mejor estrategia algorítmica de forma automática.
-  ```bash
-  ./push_swap 4 67 3 87 23
-  ```
-* **Forzar Estrategia Simple:** Puedes intercalar el selector sin romper el flujo:
-  ```bash
-  ./push_swap 3 1 --simple 2
-  ```
-* **Forzar Estrategia de Chunks Dinámicos:**
-  ```bash
-  ./push_swap --medium 5 4 3 2 1
-  ```
-* **Modo Estadístico / Benchmark (`--bench`):** Desvía un informe pormenorizado con el recuento exacto de cada una de las operaciones ejecutadas directamente a la salida de errores (`stderr`), colocado al final:
-  ```bash
-  ./push_swap "4 67 3 87 23" --bench
-  ```
+This makes the sorting logic easier because the algorithms can work with a compact range from `0` to `size - 1`, regardless of whether the original values are negative, very large, or far apart.
 
-### Validación Automática con Checker
-Puedes verificar mediante una tubería (*pipe*) que la secuencia de operaciones generada ordena perfectamente el Stack sin estados corruptos:
+Indexes are assigned once after parsing and before sorting. They are not updated during operations, because the index belongs to the value itself, not to the current position of the node in the stack.
+
+### Initial Disorder Index
+
+Before sorting, the program computes a disorder index based on inversions in the input. An inversion happens when a larger value appears before a smaller one.
+
+This gives an estimation of how far the input is from being sorted and helps the adaptive strategy decide which internal approach is more appropriate.
+
+### Sorting Strategies
+
+#### 1. Simple Strategy — Small Inputs / O(n²)
+
+The simple strategy is used for small inputs. It handles very small stacks with direct logic and uses minimum extraction for small sets.
+
+This avoids the overhead of larger algorithms when the number of elements is low.
+
+#### 2. Medium Strategy — Chunks / O(n√n)
+
+The chunk-based strategy divides the indexed range into groups. Elements are pushed from stack `a` to stack `b` according to moving index windows, and stack `b` is partially organized during the process.
+
+When all relevant values are in `b`, the algorithm repeatedly brings the highest index back to the top of `b` using the shortest rotation direction, then pushes it back to `a`.
+
+This strategy gives good results for medium and large inputs while keeping the logic understandable.
+
+#### 3. Complex Strategy — Radix / O(n log n)
+
+The radix strategy works on the binary representation of the normalized indexes. It processes each bit and moves elements between stacks according to whether that bit is set.
+
+Using indexes makes radix practical because all values are in the range `0` to `size - 1`.
+
+#### 4. Adaptive Strategy
+
+The adaptive strategy is the default behavior. It chooses the internal strategy according to the input size and the disorder index.
+
+The goal is to avoid using a heavy strategy for small or nearly sorted inputs, while still using scalable methods for larger and more disordered stacks.
+
+---
+
+## 📊 Performance Targets
+
+According to the project requirements, the program must stay within the expected operation limits:
+
+### 100 random numbers
+
+- Minimum requirement: fewer than 2000 operations
+- Good performance: fewer than 1500 operations
+- Excellent performance: fewer than 700 operations
+
+### 500 random numbers
+
+- Minimum requirement: fewer than 12000 operations
+- Good performance: fewer than 8000 operations
+- Excellent performance: fewer than 5500 operations
+
+The implementation was tested with random inputs and verified with the project checker to ensure that the generated operations correctly sort the stack.
+
+---
+
+## 🛠️ Usage
+
+### Requirements
+
+- `cc`, `clang`, or `gcc`
+- `make`
+- Unix-based system such as Linux or macOS
+
+### Compilation
+
+Compile the mandatory program:
+
+```bash
+make
+```
+
+Compile the bonus checker:
+
+```bash
+make bonus
+```
+
+Remove object files:
+
+```bash
+make clean
+```
+
+Remove object files and binaries:
+
+```bash
+make fclean
+```
+
+Rebuild everything:
+
+```bash
+make re
+```
+
+### Running Push_swap
+
+The program accepts integers as separate arguments:
+
+```bash
+./push_swap 4 67 3 87 23
+```
+
+It also accepts quoted strings containing several numbers:
+
+```bash
+./push_swap "4 67 3 87 23"
+```
+
+Mixed input is supported:
+
+```bash
+./push_swap "100 23 1" 74 923
+```
+
+Optional strategy flags may be placed before, between, or after the numbers:
+
+```bash
+./push_swap --simple 3 2 1
+./push_swap 3 2 --medium 1
+./push_swap "5 4" --complex 3 2 1
+./push_swap 32 3 4 --bench 1 55
+```
+
+If no strategy flag is provided, the program uses the adaptive strategy by default.
+
+### Available Flags
+
+- `--simple`: forces the simple strategy.
+- `--medium`: forces the chunk-based strategy.
+- `--complex`: forces the radix strategy.
+- `--adaptive`: forces the adaptive strategy.
+- `--bench`: enables benchmark output.
+
+Only one strategy flag should be used at a time. The `--bench` flag can be combined with one strategy flag.
+
+### Benchmark Mode
+
+Benchmark mode prints additional information to `stderr`, not to `stdout`.
+
+This is important because `stdout` must contain only Push_swap operations, so it can be safely piped into the checker.
+
+Example:
+
+```bash
+./push_swap --bench 3 2 1 | ./checker 3 2 1
+```
+
+The checker receives only the operations through the pipe. The benchmark report remains separated on `stderr`.
+
+---
+
+## ✅ Validation with Checker
+
+The generated operations can be verified with the checker:
+
 ```bash
 ARG="3 1 2 5 4"; ./push_swap $ARG | ./checker $ARG
 ```
 
+Expected output:
+
+```text
+OK
+```
+
+A mixed input example:
+
+```bash
+./push_swap "100 23 1 74 923" 89 33 12 | ./checker "100 23 1 74 923" 89 33 12
+```
+
+Expected output:
+
+```text
+OK
+```
+
+Benchmark output can be redirected separately:
+
+```bash
+./push_swap --bench 3 2 1 > ops 2> bench.txt
+./checker 3 2 1 < ops
+```
+
 ---
 
-## 📚 Recursos y Uso de IA
+## ❌ Error Handling
 
-### Referencias Consultadas
-* *Introduction to Algorithms* (CLRS): Fundamentos teóricos sobre la optimización de algoritmos de ordenación no comparativos y análisis asintótico de ventanas de proximidad.
-* Documentación y guías de la comunidad de la Escuela 42 relativas a las mecánicas de *Hourglass/Chunks Sort* aplicadas a pilas.
+The program prints `Error` followed by a newline to `stderr` when the input is invalid.
 
-### Declaración de Uso de Inteligencia Artificial
-En cumplimiento con las normativas éticas de desarrollo de la Escuela 42, se declara que se ha utilizado un Asistente de IA como herramienta de co-creación y soporte técnico bajo las siguientes pautas:
+Examples of invalid input:
 
-* **Estructura y Formato:** Soporte en el formateo de cadenas visuales Unicode complejas del `Makefile` para evitar la corrupción de terminales modernas y la generación estructurada de este documento técnico en Markdown.
-* **Diseño Arquitectónico:** Asistencia conceptual en la encapsulación del entorno de ejecución mediante el struct `t_program`, asegurando que no se utilicen variables globales proscritas.
-* **Optimización Algorítmica y Depuración:** Colaboración en el cálculo matemático analítico para la transición de un Radix Sort rígido en base 2 hacia un modelo dinámico adaptativo de *Chunks*, fragmentando la lógica en funciones independientes con el fin de cumplir estrictamente la restricción de las 25 líneas impuestas por la Norma de 42.
+```bash
+./push_swap 1 2 2
+./push_swap ""
+./push_swap "   "
+./push_swap 2147483648
+./push_swap -2147483649
+./push_swap 3 2 hello 1
+./push_swap --simple --complex 3 2 1
+```
+
+The checker also prints `Error` for invalid arguments or invalid instructions.
+
+---
+
+## 📚 Resources and Use of AI
+
+### References
+
+- 42 Push_swap subject
+- 42 Norm
+- 42 community explanations about chunk-based sorting
+- General references on sorting algorithms and algorithmic complexity
+
+### AI Usage Statement
+
+AI assistance was used as a support tool during the project workflow, mainly for:
+
+- reviewing project structure;
+- identifying parsing edge cases;
+- improving the README wording and organization;
+- reasoning about test cases;
+- checking whether the implementation matched the expected subject behavior.
+
+All generated suggestions were manually reviewed, adapted, tested, and validated with:
+
+- `norminette`;
+- `make` and `make bonus`;
+- `valgrind`;
+- the project checker;
+- random input tests.
+
+The final responsibility for the code, the tests, and the project defense remains with the authors.

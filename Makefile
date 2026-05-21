@@ -47,11 +47,9 @@ BONUS_SRCS  = checker.c \
 OBJS        = $(patsubst %.c, $(OBJ_DIR)/%.o, $(SRCS))
 BONUS_OBJS  = $(patsubst %.c, $(OBJ_DIR)/%.o, $(BONUS_SRCS))
 
-# --- Variables de Progreso Universales ---
 TOTAL_FILES := $(words $(OBJS))
 COMPILED_FILES = 0
 
-# Colores ANSI y Emojis
 GREEN       = \033[1;32m
 BG_GREEN    = \033[42m
 BLUE        = \033[1;34m
@@ -67,16 +65,15 @@ all: $(NAME)
 
 $(NAME): $(OBJS)
 	@$(CC) $(CFLAGS) $(OBJS) -o $(NAME)
-	@printf "\r$(CLEAN_LINE)$(TICK) $(GREEN)$(NAME) compilado con éxito!$(RESET)\n"
+	@printf "\r$(CLEAN_LINE)$(TICK) $(GREEN)$(NAME) compiled succesfully!$(RESET)\n"
 
 bonus: TOTAL_FILES := $(words $(BONUS_OBJS))
 bonus: $(BONUS_NAME)
 
 $(BONUS_NAME): $(BONUS_OBJS)
 	@$(CC) $(CFLAGS) $(BONUS_OBJS) -o $(BONUS_NAME)
-	@printf "\r$(CLEAN_LINE)$(TICK) $(GREEN)$(BONUS_NAME) compilado con éxito!$(RESET)\n"
+	@printf "\r$(CLEAN_LINE)$(TICK) $(GREEN)$(BONUS_NAME) compiled succesfully!$(RESET)\n"
 
-# Regla con espacios puros pintados de verde para simular bloques sólidos
 $(OBJ_DIR)/%.o: %.c push_swap.h
 	@mkdir -p $(dir $@)
 	@$(eval COMPILED_FILES=$(shell echo $$(($(COMPILED_FILES)+1))))
@@ -85,15 +82,15 @@ $(OBJ_DIR)/%.o: %.c push_swap.h
 	@$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 	@BAR=""; i=0; while [ $$i -lt $(NB_CHARS) ]; do BAR="$$BAR "; i=$$((i+1)); done; \
 	SPACE=""; i=0; max_space=$$((20 - $(NB_CHARS))); while [ $$i -lt $$max_space ]; do SPACE="$$SPACE "; i=$$((i+1)); done; \
-	printf "\r$(CLEAN_LINE)$(GEAR) $(WHITE)Compilando: [$(BG_GREEN)%s$(RESET)%s] $(BLUE)%d%%$(RESET) (%s)" "$$BAR" "$$SPACE" "$(PERCENT)" "$<"
+	printf "\r$(CLEAN_LINE)$(GEAR) $(WHITE)Compiling: [$(BG_GREEN)%s$(RESET)%s] $(BLUE)%d%%$(RESET) (%s)" "$$BAR" "$$SPACE" "$(PERCENT)" "$<"
 
 clean:
 	@rm -rf $(OBJ_DIR)
-	@echo "$(TRASH) $(RED) Objetos limpiados.$(RESET)"
+	@echo "$(TRASH) $(RED) Objets cleaned.$(RESET)"
 
 fclean: clean
 	@rm -f $(NAME) $(BONUS_NAME)
-	@echo "$(TRASH) $(RED) Ejecutables eliminados.$(RESET)"
+	@echo "$(TRASH) $(RED) Executables deleted.$(RESET)"
 
 re: fclean all
 
