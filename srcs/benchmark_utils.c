@@ -6,7 +6,7 @@
 /*   By: acoromin <acoromin@student.42barcelona.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/21 09:15:00 by acoromin          #+#    #+#             */
-/*   Updated: 2026/05/21 09:25:00 by acoromin         ###   ########.fr       */
+/*   Updated: 2026/05/21 09:17:06 by joaqumar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ void	print_strategy_info(t_program *prog)
 	if (prog->strategy == STRAT_SIMPLE)
 		ft_putstr_fd("Simple / O(n^2)\n", 2);
 	else if (prog->strategy == STRAT_MEDIUM)
-		ft_putstr_fd("Medium / O(n \xE2\x88\x9An)\n", 2);
+		ft_putstr_fd("Medium / O(n\xE2\x88\x9An)\n", 2);
 	else if (prog->strategy == STRAT_COMPLEX)
 		ft_putstr_fd("Complex / O(n log n)\n", 2);
 	else if (prog->disorder_index < 20.0)
