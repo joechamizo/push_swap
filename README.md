@@ -269,7 +269,7 @@ The checker also prints `Error` for invalid arguments or invalid instructions.
 ### References
 
 - 42 Push_swap subject
-- 42 Norm
+- 42 Norminette
 - 42 community explanations about chunk-based sorting
 - General references on sorting algorithms and algorithmic complexity
 
