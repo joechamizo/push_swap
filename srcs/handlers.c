@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   handlers.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: acoromin <acoromin@student.42barcelona.    +#+  +:+       +#+        */
+/*   By: joaqumar <joaqumar@student.42barcelona.co  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/05/20 00:00:00 by acoromin          #+#    #+#             */
-/*   Updated: 2026/05/20 00:00:00 by acoromin         ###   ########.fr       */
+/*   Created: 2026/06/22 18:57:25 by joaqumar          #+#    #+#             */
+/*   Updated: 2026/06/22 18:57:28 by joaqumar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

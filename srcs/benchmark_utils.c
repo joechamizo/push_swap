@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   benchmark_utils.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: acoromin <acoromin@student.42barcelona.    +#+  +:+       +#+        */
+/*   By: joaqumar <joaqumar@student.42barcelona.co  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/05/21 09:15:00 by acoromin          #+#    #+#             */
-/*   Updated: 2026/05/21 09:17:06 by joaqumar         ###   ########.fr       */
+/*   Created: 2026/06/22 18:56:56 by joaqumar          #+#    #+#             */
+/*   Updated: 2026/06/22 18:56:59 by joaqumar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

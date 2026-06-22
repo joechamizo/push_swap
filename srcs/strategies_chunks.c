@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   strategies_chunks.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: acoromin <acoromin@student.42barcelona.    +#+  +:+       +#+        */
+/*   By: joaqumar <joaqumar@student.42barcelona.co  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/05/20 00:00:00 by acoromin          #+#    #+#             */
-/*   Updated: 2026/05/20 22:52:59 by joaqumar         ###   ########.fr       */
+/*   Created: 2026/06/22 19:00:16 by joaqumar          #+#    #+#             */
+/*   Updated: 2026/06/22 19:00:18 by joaqumar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

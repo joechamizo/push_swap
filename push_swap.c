@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   push_swap.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: acoromin <acoromin@student.42barcelona.    +#+  +:+       +#+        */
+/*   By: joaqumar <joaqumar@student.42barcelona.co  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/05/20 00:00:00 by acoromin          #+#    #+#             */
-/*   Updated: 2026/05/20 00:00:00 by acoromin         ###   ########.fr       */
+/*   Created: 2026/06/22 18:55:35 by joaqumar          #+#    #+#             */
+/*   Updated: 2026/06/22 18:55:40 by joaqumar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

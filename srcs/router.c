@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   router.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: acoromin <acoromin@student.42barcelona.    +#+  +:+       +#+        */
+/*   By: joaqumar <joaqumar@student.42barcelona.co  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/05/20 00:00:00 by acoromin          #+#    #+#             */
-/*   Updated: 2026/05/20 22:52:18 by joaqumar         ###   ########.fr       */
+/*   Created: 2026/06/22 18:59:07 by joaqumar          #+#    #+#             */
+/*   Updated: 2026/06/22 18:59:11 by joaqumar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
