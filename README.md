@@ -114,6 +114,14 @@ The implementation was tested with random inputs and verified with the project c
 
 ## 🛠️ Usage
 
+### Quick test
+
+Run the regression checks:
+
+```bash
+make test
+```
+
 ### Requirements
 
 - `cc`, `clang`, or `gcc`
@@ -261,6 +269,19 @@ Examples of invalid input:
 ```
 
 The checker also prints `Error` for invalid arguments or invalid instructions.
+
+---
+
+## 🧪 Validation Summary
+
+The project has been verified with:
+
+- `make`
+- `make bonus`
+- `make test`
+- `norminette`
+
+These checks confirm that the project builds, the parser behaves correctly on common edge cases, and the repository remains in a consistent state.
 
 ---
 

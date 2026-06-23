@@ -17,6 +17,8 @@ static int	get_op_index(char *op)
 	char	*ops[11];
 	int		i;
 
+	if (!op || !*op)
+		return (-1);
 	ops[0] = "sa";
 	ops[1] = "sb";
 	ops[2] = "ss";
@@ -85,6 +87,8 @@ void	execute_op(char *op, t_program *prog, int print)
 {
 	int	op_idx;
 
+	if (!prog || !op || !*op)
+		return ;
 	dispatch_to_core(op, prog);
 	prog->total_ops++;
 	op_idx = get_op_index(op);

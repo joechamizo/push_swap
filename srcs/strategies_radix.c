@@ -3,9 +3,11 @@
 static void	process_bit(t_program *prog, int bit, int size)
 {
 	int	j;
+	int	stack_size;
 
 	j = 0;
-	while (j < size)
+	stack_size = size;
+	while (j < stack_size)
 	{
 		if (((prog->a->index >> bit) & 1) == 1)
 			execute_op("ra", prog, 1);

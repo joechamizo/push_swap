@@ -12,12 +12,24 @@
 
 #include "push_swap.h"
 
+static int	has_whitespace(char *arg)
+{
+	while (*arg)
+	{
+		if (*arg == ' ' || *arg == '\t' || *arg == '\n'
+			|| *arg == '\v' || *arg == '\f' || *arg == '\r')
+			return (1);
+		arg++;
+	}
+	return (0);
+}
+
 static void	parse_value(char *arg, t_program *prog)
 {
 	char	**matrix;
 	char	*single[2];
 
-	if (ft_strchr(arg, ' '))
+	if (has_whitespace(arg))
 	{
 		matrix = ft_split(arg, ' ');
 		parse_matrix(matrix, prog, 1);

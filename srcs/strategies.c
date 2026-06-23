@@ -51,19 +51,26 @@ static int	get_pos(t_stack *stack, int target_index)
 		stack = stack->next;
 		pos++;
 	}
-	return (0);
+	return (-1);
 }
 
 static void	push_targets_to_b(t_program *prog, int target)
 {
+	int	size;
+	int	pos;
+
 	while (get_stack_size(prog->a) > 3)
 	{
+		pos = get_pos(prog->a, target);
+		size = get_stack_size(prog->a);
 		while (prog->a->index != target)
 		{
-			if (get_pos(prog->a, target) <= get_stack_size(prog->a) / 2)
+			if (pos <= size / 2)
 				execute_op("ra", prog, 1);
 			else
 				execute_op("rra", prog, 1);
+			pos = get_pos(prog->a, target);
+			size = get_stack_size(prog->a);
 		}
 		execute_op("pb", prog, 1);
 		target++;

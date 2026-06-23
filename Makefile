@@ -106,4 +106,8 @@ fclean: clean
 
 re: fclean all
 
-.PHONY: all clean fclean re bonus
+.PHONY: all clean fclean re bonus test
+
+test: $(NAME)
+	@chmod +x tests/test_parser.sh
+	@sh tests/test_parser.sh

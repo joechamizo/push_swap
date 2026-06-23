@@ -12,6 +12,15 @@
 
 #include "push_swap.h"
 
+static int	is_sep(char c, char sep)
+{
+	if (sep == ' ' || sep == '\t' || sep == '\n' || sep == '\v'
+		|| sep == '\f' || sep == '\r')
+		return (c == sep || c == ' ' || c == '\t' || c == '\n'
+			|| c == '\v' || c == '\f' || c == '\r');
+	return (c == sep);
+}
+
 static int	count_words(const char *s, char c)
 {
 	int	count;
@@ -21,12 +30,12 @@ static int	count_words(const char *s, char c)
 	in_word = 0;
 	while (*s)
 	{
-		if (*s != c && !in_word)
+		if (!is_sep(*s, c) && !in_word)
 		{
 			in_word = 1;
 			count++;
 		}
-		else if (*s == c)
+		else if (is_sep(*s, c))
 			in_word = 0;
 		s++;
 	}
@@ -73,10 +82,10 @@ static char	**fill_split(char const *s, char c, char **matrix)
 	j = 0;
 	while (s[i])
 	{
-		while (s[i] && s[i] == c)
+		while (s[i] && is_sep(s[i], c))
 			i++;
 		start = i;
-		while (s[i] && s[i] != c)
+		while (s[i] && !is_sep(s[i], c))
 			i++;
 		if (i > start)
 		{
